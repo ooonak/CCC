@@ -8,6 +8,17 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+#include "emscripten/websocket.h"
+
+void websocket()
+{
+    if (emscripten_websocket_is_supported())
+    {
+        spdlog::info("Websocket is supported.");
+    }
+
+}
+
 void log_init()
 {
     try
@@ -23,6 +34,9 @@ void log_init()
 }
 
 int main(void) {
+    log_init();
+    websocket();
+
     spdlog::info("spdlog {}, msgpack-cxx {}", SPDLOG_VERSION, msgpack_version());
     std::cout << std::endl;
 
