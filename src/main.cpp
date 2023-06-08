@@ -6,8 +6,26 @@
 
 #include "msgpack.hpp"
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+
+void log_init()
+{
+    try
+    {
+        auto console = spdlog::stdout_color_mt("console");
+        spdlog::set_default_logger(console);
+        spdlog::set_level(spdlog::level::debug);
+    }
+    catch (const spdlog::spdlog_ex &ex)
+    {
+        std::cout << "Log init failed: " << ex.what() << std::endl;
+    }
+}
 
 int main(void) {
+    spdlog::info("spdlog {}, msgpack-cxx {}", SPDLOG_VERSION, msgpack_version());
+    std::cout << std::endl;
+
     using namespace ftxui;
 
     auto summary = [&] {
@@ -37,7 +55,6 @@ int main(void) {
     Render(screen, document);
 
     std::cout << screen.ToString() << '\0' << std::endl;
-    spdlog::info("spdlog {}, msgpack-cxx {}", SPDLOG_VERSION, msgpack_version());
 
     return EXIT_SUCCESS;
 }
