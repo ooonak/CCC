@@ -8,15 +8,57 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+#include <emscripten/emscripten.h>
 #include "emscripten/websocket.h"
 
-void websocket()
-{
-    if (emscripten_websocket_is_supported())
+// Random Googled example from https://gist.github.com/nus/564e9e57e4c107faa1a45b8332c265b9
+
+EM_BOOL onopen(int eventType, const EmscriptenWebSocketOpenEvent *websocketEvent, void *userData) {
+    std::cout << __func__ << std::endl;
+    std::cout << '\0' << std::endl;
+
+    EMSCRIPTEN_RESULT result;
+    result = emscripten_websocket_send_utf8_text(websocketEvent->socket, "Joh  N Doe");
+    if (result) {
+        std::cerr << "Failed to emscripten_websocket_send_utf8_text(): " << result << std::endl;
+    }
+    return EM_TRUE;
+}
+
+EM_BOOL onerror(int eventType, const EmscriptenWebSocketErrorEvent *websocketEvent, void *userData) {
+    std::cout << __func__ << std::endl;
+    std::cout << '\0' << std::endl;
+
+    return EM_TRUE;
+}
+
+EM_BOOL onclose(int eventType, const EmscriptenWebSocketCloseEvent *websocketEvent, void *userData) {
+    std::cout << __func__ << std::endl;
+    std::cout << '\0' << std::endl;
+
+    if (userData != nullptr)
     {
-        spdlog::info("Websocket is supported.");
+        *(bool*)userData = true;
     }
 
+    return EM_TRUE;
+}
+
+EM_BOOL onmessage(int eventType, const EmscriptenWebSocketMessageEvent *websocketEvent, void *userData) {
+    std::cout << __func__ << std::endl;
+    std::cout << '\0' << std::endl;
+    if (websocketEvent->isText) {
+        // For only ascii chars.
+        std::cout << "message: " << websocketEvent->data << std::endl;
+        std::cout << '\0' << std::endl;
+    }
+
+    EMSCRIPTEN_RESULT result;
+    result = emscripten_websocket_close(websocketEvent->socket, 1000, "no reason");
+    if (result) {
+        std::cerr << "Failed to emscripten_websocket_close(): " << result << std::endl;
+    }
+    return EM_TRUE;
 }
 
 void log_init()
@@ -34,9 +76,30 @@ void log_init()
 }
 
 int main(void) {
-    log_init();
-    websocket();
+    bool stop = false;
 
+    if (emscripten_websocket_is_supported())
+    {
+        EmscriptenWebSocketCreateAttributes ws_attrs = {
+        "ws://websockets.chilkat.io/wsChilkatEcho.ashx",
+        nullptr,
+        EM_TRUE
+    };
+
+    EMSCRIPTEN_WEBSOCKET_T ws = emscripten_websocket_new(&ws_attrs);
+    if (ws <= 0)
+    {
+        std::cerr << "emscripten_websocket_new failed " << ws << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    emscripten_websocket_set_onopen_callback(ws, NULL, onopen);
+    emscripten_websocket_set_onerror_callback(ws, NULL, onerror);
+    emscripten_websocket_set_onclose_callback(ws, &stop, onclose);
+    emscripten_websocket_set_onmessage_callback(ws, NULL, onmessage);
+    }
+
+    log_init();
     spdlog::info("spdlog {}, msgpack-cxx {}", SPDLOG_VERSION, msgpack_version());
     std::cout << std::endl;
 

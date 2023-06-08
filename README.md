@@ -16,7 +16,6 @@ $ cd build_emscriptem
 $ emcmake cmake -DMSGPACK_USE_BOOST=OFF ..
 $ make -j $(nproc)
 
-$ cp index.html run_webassembly.pypy src/
 $ cd src/
 $ python ./run_webassembly.py
 ```
