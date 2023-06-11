@@ -28,14 +28,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(boost spdlog msgpack)
 
 
-project(MsgService VERSION 0.0.1 LANGUAGES CXX)
+project(MsgService VERSION 1.0.0 LANGUAGES CXX)
 
 file(WRITE ${PROJECT_BINARY_DIR}/MsgServiceConfig.hpp.in "
 #pragma once
 
-#define MSGSERVICE_VERSION_MAJOR @MSGSERVICE_VERSION_MAJOR@
-#define MSGSERVICE_VERSION_MINOR @MSGSERVICE_VERSION_MINOR@
-#define MSGSERVICE_VERSION_PATCH @MSGSERVICE_VERSION_PATCH@
+#define MSGSERVICE_VERSION_MAJOR @MsgService_VERSION_MAJOR@
+#define MSGSERVICE_VERSION_MINOR @MsgService_VERSION_MINOR@
+#define MSGSERVICE_VERSION_PATCH @MsgService_VERSION_PATCH@
 ")
 
 file(GLOB MESSAGE_SOURCES messages/*.cpp messages/*.hpp)

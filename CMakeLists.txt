@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(ccc)
+project(CCC)
 
-option(BUILD_TESTS "Build test programs" OFF)
+option(EMSCRIPTEM "Build WebAssembly version" OFF)
+option(BUILD_TESTS "Build test programs" ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -23,11 +24,7 @@ endif()
 message(STATUS "CXX flags: ${CMAKE_CXX_FLAGS}")
 endif()
 
-add_subdirectory(src)
-
-if(BUILD_TESTS)
-    include(CTest)
-    enable_testing()
-    add_subdirectory(test)
-endif(BUILD_TESTS)
+add_subdirectory(msgservice)
+add_subdirectory(tui)
+add_subdirectory(app)
 
