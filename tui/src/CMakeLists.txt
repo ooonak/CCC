@@ -17,7 +17,7 @@ endif()
 
 project(Tui VERSION 0.0.1 LANGUAGES CXX)
 
-file(WRITE ${PROJECT_BINARY_DIR}/tuiconfig.hpp.in "
+file(WRITE ${PROJECT_BINARY_DIR}/TuiConfig.hpp.in "
 #pragma once
 
 #define TUI_VERSION_MAJOR @TUI_VERSION_MAJOR@
@@ -26,8 +26,8 @@ file(WRITE ${PROJECT_BINARY_DIR}/tuiconfig.hpp.in "
 ")
 
 add_library(${PROJECT_NAME}
-    include/tui/tui.hpp
-    tui.cpp
+    include/tui/Tui.hpp
+    Tui.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME}
 
 add_library(CCC::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-configure_file("${PROJECT_BINARY_DIR}/tuiconfig.hpp.in" tuiconfig.hpp)
+configure_file("${PROJECT_BINARY_DIR}/TuiConfig.hpp.in" TuiConfig.hpp)
 
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${CMAKE_PROJECT_NAME}Targets
@@ -60,7 +60,7 @@ install(TARGETS ${PROJECT_NAME}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(DIRECTORY include/dp
+install(DIRECTORY include/tui
         DESTINATION include
         COMPONENT Devel
 )
