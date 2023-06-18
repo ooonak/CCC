@@ -6,6 +6,7 @@ find_package(GTest REQUIRED)
 
 add_executable(${PROJECT_NAME}
     TuiTests.cpp
+    TuiHelpersTests.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

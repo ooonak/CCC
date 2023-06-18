@@ -30,6 +30,8 @@ add_library(${PROJECT_NAME}
     Tui.cpp
     TuiImpl.hpp
     TuiImpl.cpp
+    TuiHelpers.hpp
+    TuiHelpers.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
