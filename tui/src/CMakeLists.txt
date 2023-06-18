@@ -28,6 +28,8 @@ file(WRITE ${PROJECT_BINARY_DIR}/TuiConfig.hpp.in "
 add_library(${PROJECT_NAME}
     include/tui/Tui.hpp
     Tui.cpp
+    TuiImpl.hpp
+    TuiImpl.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
